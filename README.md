@@ -5,8 +5,7 @@ Installation:
 - Import plugin to project
 - Drag the canvas prefab to splash screen [1st game screen]
 Assets/CrossPromo/Prefab/CrossPromoCanvas.prefab
-- Set up the URL to Promo Data URL field. This url points to the JSON file.
-URL example: https://www.dropbox.com/s/gm0ualys3ms3ico/CrossPromoData.json?raw=1
+- Set up the URL to Promo Data URL field.
 - Set the “Button Show Delay” time. The value is in second. The promo button will be shown
 after the delay time is complete. The time calculation started at launch of game.
 - Run the game, as soon as time is up the Promo Icon will be shown.
