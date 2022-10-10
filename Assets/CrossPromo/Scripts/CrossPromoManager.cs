@@ -99,7 +99,6 @@ namespace Devshifu.CrossPromo
             }
             else
             {
-                Debug.Log(www.text);
                 yield return StartCoroutine(HandleResponse(www.text));
             }
         }
@@ -175,7 +174,13 @@ namespace Devshifu.CrossPromo
             {
                 icon.sprite = Utils.GetPromoSprite();
                 buttonActive = true;
-                promoButton.onClick.AddListener(() => Application.OpenURL(gamesData[index].PageUrl));
+                promoButton.onClick.AddListener(() =>
+                { 
+                    Application.OpenURL(gamesData[index].PageUrl);
+                    currentDelay = buttonShowDelay + Time.time;
+                    promoButton.gameObject.SetActive(false);
+                    buttonActive = false;
+                });
                 promoButton.gameObject.SetActive(true);
             }
         }
