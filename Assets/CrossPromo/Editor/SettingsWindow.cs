@@ -83,6 +83,8 @@ namespace Devshifu.CrossPromo
                 }
                 EditorGUILayout.EndHorizontal();
 
+                crossPromoData.Games[i].Id = EditorGUILayout.TextField("Game ID", crossPromoData.Games[i].Id);
+
                 if (GUILayout.Button("Remove", GUILayout.Height(30)))
                 {
                     crossPromoData.Games.RemoveAt(i);

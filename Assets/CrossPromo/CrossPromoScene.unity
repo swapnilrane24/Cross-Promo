@@ -387,5 +387,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7345969293818207659, guid: bbc32e46c60add740be5ef78ee63667e,
+        type: 3}
+      propertyPath: gameID
+      value: com.battle.island
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbc32e46c60add740be5ef78ee63667e, type: 3}

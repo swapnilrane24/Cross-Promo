@@ -414,8 +414,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b0be5fb15c1f243b8fc48c3e28c56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameID: 001
   buttonShowDelay: 10
   icon: {fileID: 7345969293505540226}
   promoButton: {fileID: 7345969292657527344}
   promoDataUrl: https://www.dropbox.com/s/gm0ualys3ms3ico/CrossPromoData.json?raw=1
-  gamesData: []

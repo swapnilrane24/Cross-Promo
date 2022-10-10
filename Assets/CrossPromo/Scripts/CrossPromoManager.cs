@@ -9,6 +9,8 @@ namespace Devshifu.CrossPromo
 {
     public class CrossPromoManager : MonoBehaviour
     {
+        private static CrossPromoManager instance;
+
         private const string KEY_ENABLED = "IsEnabled";
         private const string KEY_APP_TITLE = "AppTitle";
         private const string KEY_IMAGE_URL = "IconUrl";
@@ -17,6 +19,8 @@ namespace Devshifu.CrossPromo
         private const string KEY_APP_PREFIX = "Games";
 
         #region Serialized Variables
+        [Tooltip("This ID is used to discart json data of this game so we dont show Ad of this game")]
+        [SerializeField] private string gameID;
         [Tooltip("Delay is in seconds")]
         [SerializeField] private float buttonShowDelay = 10;
         [SerializeField] private Image icon;
@@ -28,13 +32,27 @@ namespace Devshifu.CrossPromo
         private float currentDelay;
         private bool canShowAd = false;
         private bool buttonActive = false;
-        [SerializeField] private List<GameItem> gamesData;
+        private List<GameItem> gamesData;
         #endregion
 
         #region Getters & Setters
+        public static CrossPromoManager Instance { get => instance; }
         #endregion
 
         #region Unity Methods
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
         private void Start()
         {
             currentDelay = buttonShowDelay + Time.time;
@@ -101,12 +119,22 @@ namespace Devshifu.CrossPromo
                 result.IsEnabled = rootNode[KEY_ENABLED].AsBool;
                 JSONArray gamesArray = rootNode[KEY_APP_PREFIX].AsArray;
 
+
                 for (int i = 0; i < gamesArray.Count; i++)
                 {
                     result.Games.Add(ParseItem(gamesArray[i]));
                 }
 
                 gamesData = result.Games;
+
+                for (int i = 0; i < gamesData.Count; i++)
+                {
+                    if (gamesData[i].Id == gameID)
+                    {
+                        gamesData.RemoveAt(i);
+                        break;
+                    }
+                }
 
                 return result;
             }
