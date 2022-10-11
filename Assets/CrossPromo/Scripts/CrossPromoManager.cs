@@ -4,6 +4,7 @@ using UnityEngine;
 using SimpleJSON;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 namespace Devshifu.CrossPromo
 {
@@ -79,6 +80,15 @@ namespace Devshifu.CrossPromo
         #endregion
 
         #region Private Methods
+        private void PromoButtonListner(int index) 
+        {
+            Application.OpenURL(gamesData[index].PageUrl);
+            currentDelay = buttonShowDelay + Time.time;
+            promoButton.gameObject.SetActive(false);
+            buttonActive = false;
+            //GameAnalyticsScript.Instance.DesignUnlockEvent("PromoButtonClicked");
+        }
+
         private void LoadData()
         {
             int index = Random.Range(0, gamesData.Count);
@@ -89,17 +99,28 @@ namespace Devshifu.CrossPromo
         {
             canShowAd = true;
 
-            WWW www = new WWW(promoDataUrl);
-            yield return www;
+            UnityWebRequest webRequest = new UnityWebRequest(promoDataUrl);
 
-            if (www.error != null)
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            yield return webRequest.SendWebRequest();
+
+            //In future use unity 2021+ and remove the 2019 code
+#if UNITY_2019
+            if (webRequest.isNetworkError)
             {
                 canShowAd = false;
-                Debug.LogError("CrossPromo: WWW error: " + www.error);
+                Debug.LogError("CrossPromo: WWW error: " + webRequest.error);
             }
+#elif UNITY_2021
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                canShowAd = false;
+                Debug.LogError("CrossPromo: WWW error: " + webRequest.error);
+            }
+#endif
             else
             {
-                yield return StartCoroutine(HandleResponse(www.text));
+                yield return StartCoroutine(HandleResponse(webRequest.downloadHandler.text));
             }
         }
 
@@ -175,11 +196,8 @@ namespace Devshifu.CrossPromo
                 icon.sprite = Utils.GetPromoSprite();
                 buttonActive = true;
                 promoButton.onClick.AddListener(() =>
-                { 
-                    Application.OpenURL(gamesData[index].PageUrl);
-                    currentDelay = buttonShowDelay + Time.time;
-                    promoButton.gameObject.SetActive(false);
-                    buttonActive = false;
+                {
+                    PromoButtonListner(index);
                 });
                 promoButton.gameObject.SetActive(true);
             }
@@ -187,23 +205,34 @@ namespace Devshifu.CrossPromo
 
         private IEnumerator downloadImage(string url)
         {
-            WWW www = new WWW(url);
-            yield return www;
+            UnityWebRequest webRequest = new UnityWebRequest(url);
 
-            if (www.error != null)
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            yield return webRequest.SendWebRequest();
+
+            //In future use unity 2021+ and remove the 2019 code
+#if UNITY_2019
+            if (webRequest.isNetworkError)
             {
-                Debug.LogError("CrossPromo: WWW error: " + www.error);
+                Debug.LogError("CrossPromo: WWW error: " + webRequest.error);
                 yield return false;
             }
+#elif UNITY_2021
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("CrossPromo: WWW error: " + webRequest.error);
+                yield return false;
+            }
+#endif
             else
             {
-                File.WriteAllBytes(Utils.GetImagePath(), www.bytes);
+                File.WriteAllBytes(Utils.GetImagePath(), webRequest.downloadHandler.data);
                 yield return true;
             }
         }
-        #endregion
+#endregion
 
-        #region Public Methods
-        #endregion
+#region Public Methods
+#endregion
     }
 }
