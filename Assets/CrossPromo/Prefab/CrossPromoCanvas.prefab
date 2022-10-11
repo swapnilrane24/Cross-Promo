@@ -627,4 +627,4 @@ MonoBehaviour:
   buttonShowDelay: 10
   icon: {fileID: 7345969293505540226}
   promoButton: {fileID: 7345969292657527344}
-  promoDataUrl: https://www.dropbox.com/s/gm0ualys3ms3ico/CrossPromoData.json?raw=1
+  promoDataUrl: https://crosspromogames.s3.ap-south-1.amazonaws.com/CrossPromoData.json
